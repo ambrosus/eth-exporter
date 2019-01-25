@@ -1,0 +1,5 @@
+---
+addresses: ''
+miners: ''
+rpcUrl: 'http://localhost:8545'
+port: '9997'
