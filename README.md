@@ -17,7 +17,7 @@ Name     | Description
 ---------|------------
 rpcUrl   | Optional. The rpcUrl to the Parity client. Default http://localhost:8545.
 port   | Optional. The port to expose the metrics at. Default 9998.
-Addresses   | Optional. The address and alias of an address' balance that you would like to track.
+addresses   | Optional. The address and alias of an address' balance that you would like to track.
 
 
 ## Exported Metrics
@@ -33,7 +33,6 @@ All metrics are exported as gauges.
 | parity_gas_price | Current gas price in Wei | |
 | parity_total_block_difficulty | Total difficulty of a block | |
 | parity_block_gas_used | Block gas usage | |
-| parity_block_nonce | Block gas nonce | |
 | parity_block_size | Block size | |
 | parity_block_gas_limit | Block gas limit | |
 | parity_block_latest_miner | The latest block miner | |
