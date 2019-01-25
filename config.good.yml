@@ -1,6 +1,6 @@
 ---
 rpcUrl: 'http://localhost:8545'
-port: '9997'
+port: '9998'
 addresses:
   - address: '0x4A369a8cEBE11c0D7dBE2C653F4DB83591e9eAc9'
     alias: wallet1
