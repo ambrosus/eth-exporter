@@ -14,4 +14,6 @@ RUN npm install
 COPY . .
 RUN npm run-script build
 
-CMD [ "npm", "start" ]
+EXPOSE 9998
+
+ENTRYPOINT ["node", "./build/bin/start_server.js"]
