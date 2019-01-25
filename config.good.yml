@@ -6,8 +6,3 @@ addresses:
     alias: wallet1
   - address: '0x6627083A10aa3137E3748C41ac22B1bA73B5D6e7'
     alias: wallet2
-miners:
-  - address: '0x2A369a8cEBE11c0D7dBE2C653F4DB83591e9eAc9'
-    alias: miner1
-  - address: '0x2627083A10aa3137E3748C41ac22B1bA73B5D6e7'
-    alias: miner2

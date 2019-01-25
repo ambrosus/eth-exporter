@@ -8,10 +8,9 @@ import { IAddress } from './helpers';
 export function createServer(
   rpcUrl: string,
   port: string,
-  addressList: IAddress[],
-  minerList: IAddress[]
+  addressList: IAddress[]
 ): http.Server {
-  const promClient = createPrometheusClient(rpcUrl, addressList, minerList);
+  const promClient = createPrometheusClient(rpcUrl, addressList);
   const app = express();
 
   app.get('/metrics', async (req: express.Request, res: express.Response) => {

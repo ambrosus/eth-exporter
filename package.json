@@ -17,7 +17,7 @@
     "url": "https://github.com/adinhodovic/eth-exporter.git"
   },
   "scripts": {
-    "lint-format": "prettier --list-different '**/**.ts'",
+    "lint-format": "prettier --list-different --write '**/**.ts'",
     "lint": "tslint -p tsconfig.json",
     "test": "mocha test/**/*.ts",
     "build": "tsc --build tsconfig.json",

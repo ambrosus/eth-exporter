@@ -3,24 +3,21 @@ import { Registry, Gauge } from 'prom-client';
 import { hashObject } from 'prom-client/lib/util';
 import express = require('express');
 import {
-  IMiner,
   makeRequest,
   IAddress,
   IPrometheusClient,
-  ICreateMetrics,
-  ILatestMiner
+  ICreateMetrics
 } from './helpers';
 import * as http from 'http';
 import * as moment from 'moment';
 
 export function createPrometheusClient(
   node: string,
-  addressList: IAddress[],
-  minerList: IAddress[]
+  addressList: IAddress[]
 ): IPrometheusClient {
   const register = new Registry();
   return {
-    createMetrics: createMetrics(register, node, addressList, minerList),
+    createMetrics: createMetrics(register, node, addressList),
     serveMetrics(req: express.Request, res: express.Response): void {
       res.setHeader('Content-Type', register.contentType);
       res.end(register.metrics());
@@ -32,8 +29,7 @@ export function createPrometheusClient(
 export function createMetrics(
   registry: Registry,
   nodeURL: string,
-  addressList: IAddress[],
-  minerList: IAddress[]
+  addressList: IAddress[]
 ): ICreateMetrics {
   const createGauge = (name: string, help: string, labelNames: string[]) =>
     new Gauge({ name, help, labelNames, registers: [registry] });
@@ -50,11 +46,6 @@ export function createMetrics(
       'address',
       'alias'
     ]),
-    latestMinedBlocksByMiners: createGauge(
-      'parity_latest_mined_blocks_by_miners',
-      'Latest Mined Block of Specific Miners',
-      ['address', 'alias']
-    ),
     parityUp: createGauge('parity_up', 'Parity up/down', []),
     totalDifficulty: createGauge(
       'parity_total_block_difficulty',
@@ -62,26 +53,14 @@ export function createMetrics(
       []
     ),
     gasUsed: createGauge('parity_block_gas_used', 'Parity Block Gas Used', []),
-    blockNonce: createGauge('parity_block_nonce', 'Parity Block Nonce', []),
     blockSize: createGauge('parity_block_size', 'Parity Block Size', []),
     gasLimit: createGauge('parity_block_gas_limit', 'Parity Gas Limit', []),
     latestMiner: createGauge(
       'parity_block_latest_miner',
       'Parity Latest Miner',
-      []
+      ['address']
     )
   };
-
-  const timeSinceMined: ILatestMiner[] = [];
-  if (minerList) {
-    minerList.map((miner: IMiner) => {
-      timeSinceMined[miner.address] = {
-        address: miner.address,
-        alias: miner.alias,
-        lastMining: 0
-      };
-    });
-  }
 
   return async () => {
     const [
@@ -114,70 +93,24 @@ export function createMetrics(
 
     gauges.blockSize.set(parseInt(blockData.size, 16));
     gauges.totalDifficulty.set(parseInt(blockData.totalDifficulty, 16));
-    gauges.blockNonce.set(parseInt(blockData.nonce, 16));
-    gauges.latestMiner.set(parseInt(blockData.miner, 16));
+    gauges.latestMiner.set(
+      { address: blockData.miner },
+      parseInt(blockData.timestamp, 16)
+    );
     gauges.gasUsed.set(parseInt(blockData.gasUsed, 16));
     gauges.gasLimit.set(parseInt(blockData.gasLimit, 16));
-
     if (addressList) {
-      addressList.map(async (item: IAddress) => {
-        const addressBalance = await makeRequest(nodeURL, 'eth_getBalance', [
-          item.address
-        ]);
-        gauges.addressBalance.set(
-          { address: item.address, alias: item.alias },
-          parseInt(addressBalance, 16)
-        );
-      });
-      await setMiners(
-        minerList,
-        latestBlockNumber,
-        nodeURL,
-        timeSinceMined,
-        gauges
+      await Promise.all(
+        addressList.map(async (item: IAddress) => {
+          const addressBalance = await makeRequest(nodeURL, 'eth_getBalance', [
+            item.address
+          ]);
+          gauges.addressBalance.set(
+            { address: item.address, alias: item.alias },
+            parseInt(addressBalance, 16)
+          );
+        })
       );
     }
   };
-}
-export async function setMiners(
-  minerList: IAddress[],
-  latestBlockNumber: string,
-  nodeURL: string,
-  timeSinceMined: ILatestMiner[],
-  // tslint:disable-next-line
-  gauges
-): Promise<void> {
-  if (minerList) {
-    let blockNumberUse = parseInt(latestBlockNumber, 16);
-    for (const i = blockNumberUse - 20; i <= blockNumberUse; blockNumberUse--) {
-      if (blockNumberUse < 0) {
-        return;
-      }
-      const hexValue = `0x${blockNumberUse.toString(16)}`;
-      const evaluatedBlock = await makeRequest(
-        nodeURL,
-        'eth_getBlockByNumber',
-        [hexValue, false]
-      );
-      minerList.map((miner: IMiner) => {
-        if (
-          parseInt(evaluatedBlock.miner, 16) === parseInt(miner.address, 16)
-        ) {
-          const timeMined = parseInt(evaluatedBlock.timestamp, 16);
-          // we add one to ensure that the default prometheus gauge
-          // value indicates that the blocks have not been mined
-          gauges.latestMinedBlocksByMiners.set(
-            { address: miner.address, alias: miner.alias },
-            moment().unix() - timeMined + 1
-          );
-          timeSinceMined[miner.address].lastMining = timeMined;
-        } else {
-          gauges.latestMinedBlocksByMiners.set(
-            { address: miner.address, alias: miner.alias },
-            moment().unix() - timeSinceMined[miner.address].lastMining
-          );
-        }
-      });
-    }
-  }
 }

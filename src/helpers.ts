@@ -27,26 +27,13 @@ export function validateConfig(config: any): void {
 
 export interface IConfig {
   addresses: IAddress[];
-  miners: IAddress[];
   port: string;
   rpcUrl: string;
-}
-
-export interface ILatestMiner {
-  address: string;
-  alias: string;
-  lastmining: number;
 }
 
 export interface IAddress {
   address: string;
   alias: string;
-}
-
-export interface IMiner {
-  address: string;
-  alias: string;
-  time: number;
 }
 
 export type ICreateMetrics = (

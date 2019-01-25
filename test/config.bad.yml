@@ -6,8 +6,3 @@ addresses:
     alias: wallet1
   - address: '4563'
     alias: wallet2
-miners:
-  - address: '2139'
-    alias: miner1
-  - address: '06e7'
-    alias: miner2

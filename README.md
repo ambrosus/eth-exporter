@@ -17,7 +17,6 @@ Name     | Description
 ---------|------------
 rpcUrl   | Optional. The rpcUrl to the Parity client. Default http://localhost:8545.
 port   | Optional. The port to expose the metrics at. Default 9998.
-Miners   | Optional. The address and alias of how long ago the miner mined a block.
 Addresses   | Optional. The address and alias of an address' balance that you would like to track.
 
 
@@ -31,7 +30,6 @@ All metrics are exported as gauges.
 | parity_version | The Parity client version | |
 | parity_transaction_queue | The current transaction queue | |
 | parity_address_balance | Balance of addresses that you specified in the config | |
-| parity_latest_mined_blocks_by_miners | The latest time a miner you specified in the config mined a block | |
 | parity_gas_price | Current gas price in Wei | |
 | parity_total_block_difficulty | Total difficulty of a block | |
 | parity_block_gas_used | Block gas usage | |

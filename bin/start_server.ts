@@ -19,4 +19,4 @@ const args = yargs
 const config: IConfig = yaml.safeLoad(fs.readFileSync(args.config, 'utf8'));
 validateConfig(config);
 
-createServer(config.rpcUrl, config.port, config.addresses, config.miners);
+createServer(config.rpcUrl, config.port, config.addresses);

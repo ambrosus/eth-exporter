@@ -27,23 +27,6 @@ export const schema = {
           }
         }
       }
-    },
-    miners: {
-      type: 'array',
-      items: {
-        type: 'object',
-        required: ['address'],
-        properties: {
-          address: {
-            type: 'string',
-            pattern: '0[xX][0-9a-fA-F]+'
-          },
-          alias: {
-            type: 'string',
-            pattern: '^(.*)$'
-          }
-        }
-      }
     }
   }
 };
