@@ -7,7 +7,7 @@ import * as fs from 'fs';
 const args = yargs
   .usage('Usage: $0 [options]')
   .option('config', {
-    default: `${process.cwd()}/config.good.yml`,
+    default: `${process.cwd()}/config.yml`,
     describe: 'Full path to config',
     type: 'string'
   })

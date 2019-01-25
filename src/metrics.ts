@@ -73,7 +73,7 @@ export function createMetrics(
   };
 
   const timeSinceMined: ILatestMiner[] = [];
-  if (minerList.length !== 0) {
+  if (minerList) {
     minerList.map((miner: IMiner) => {
       timeSinceMined[miner.address] = {
         address: miner.address,
@@ -119,7 +119,7 @@ export function createMetrics(
     gauges.gasUsed.set(parseInt(blockData.gasUsed, 16));
     gauges.gasLimit.set(parseInt(blockData.gasLimit, 16));
 
-    if (addressList.length !== 0) {
+    if (addressList) {
       addressList.map(async (item: IAddress) => {
         const addressBalance = await makeRequest(nodeURL, 'eth_getBalance', [
           item.address
@@ -147,7 +147,7 @@ export async function setMiners(
   // tslint:disable-next-line
   gauges
 ): Promise<void> {
-  if (minerList.length !== 0) {
+  if (minerList) {
     let blockNumberUse = parseInt(latestBlockNumber, 16);
     for (const i = blockNumberUse - 20; i <= blockNumberUse; blockNumberUse--) {
       if (blockNumberUse < 0) {

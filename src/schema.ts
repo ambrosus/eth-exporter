@@ -1,6 +1,6 @@
 export const schema = {
   type: 'object',
-  required: ['rpcUrl', 'port', 'addresses', 'miners'],
+  required: ['rpcUrl', 'port'],
   properties: {
     rpcUrl: {
       type: 'string',
