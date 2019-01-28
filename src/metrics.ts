@@ -1,7 +1,5 @@
 import { Registry, Gauge } from 'prom-client';
-// tslint:disable-next-line:no-submodule-imports
-import { hashObject } from 'prom-client/lib/util';
-import express = require('express');
+import * as express from 'express';
 import {
   makeRequest,
   IAddress,
@@ -9,7 +7,6 @@ import {
   ICreateMetrics
 } from './helpers';
 import * as http from 'http';
-import * as moment from 'moment';
 
 export function createPrometheusClient(
   node: string,

@@ -13,6 +13,10 @@ const goodConfig = yaml.safeLoad(
   fs.readFileSync(`${process.cwd()}/config.good.yml`, 'utf8')
 );
 
+const rpcUrl = 'http://localhost:8545';
+const port = '9998';
+const exporterUrl = `http://localhost:${port}`;
+
 describe('Eth Exporter Configurations', () => {
   it('does not throw when passed good configs', () => {
     expect(() => {
@@ -31,18 +35,12 @@ describe('Eth Exporter Configurations', () => {
 });
 
 describe('Eth Exporter Responses with default config', () => {
-  const defaultConfig = yaml.safeLoad(
-    fs.readFileSync(`${process.cwd()}/config.yml`, 'utf8')
-  );
-
   let parityResponse;
-  const { rpcUrl, port, addresses } = defaultConfig;
-  const url = `http://localhost:${port}`;
   let server;
 
   before(async () => {
-    server = await createServer(rpcUrl, port, addresses);
-    ({ data: parityResponse } = await httpClient.get(`${url}/metrics`));
+    server = await createServer(rpcUrl, port, []);
+    ({ data: parityResponse } = await httpClient.get(`${exporterUrl}/metrics`));
   });
 
   after(() => {
@@ -50,7 +48,7 @@ describe('Eth Exporter Responses with default config', () => {
   });
 
   it('has an index page', async () => {
-    let indexResponse = await httpClient.get(url);
+    let indexResponse = await httpClient.get(exporterUrl);
 
     expect(indexResponse.data).to.equal(
       '<p> You can find Metrics on the <a href="/metrics"> /Metrics</a> path </p>'
@@ -86,9 +84,7 @@ describe('Eth Exporter Responses with default config', () => {
   });
 
   it('does not contain address balance when addresses are not defined', () => {
-    if (addresses) {
-      expect(parityResponse).to.not.contain('parity_address_balance{address=}');
-    }
+    expect(parityResponse).to.not.contain('parity_address_balance{address=}');
   });
   it('get transaction queue', () => {
     expect(parityResponse).to.contain('parity_transaction_queue');
@@ -97,13 +93,15 @@ describe('Eth Exporter Responses with default config', () => {
 
 describe('Eth Exporter with addresses config', () => {
   let parityResponse;
-  const { rpcUrl, port, addresses } = goodConfig;
-  const url = `http://localhost:${port}`;
   let server;
+  const addresses = [
+    { address: '0x4A369a8cEBE11c0D7dBE2C653F4DB83591e9eAc9', alias: 'wallet1' },
+    { address: '0x4A369a8cEBE11c0D7dBE2C653F4DB83591e9eAc9', alias: 'wallet2' }
+  ];
 
   before(async () => {
     server = await createServer(rpcUrl, port, addresses);
-    ({ data: parityResponse } = await httpClient.get(`${url}/metrics`));
+    ({ data: parityResponse } = await httpClient.get(`${exporterUrl}/metrics`));
   });
 
   after(() => {
@@ -122,11 +120,10 @@ describe('Eth Exporter with addresses config', () => {
 describe('Eth Exporter with Eth down', () => {
   let parityResponse;
   let server;
-  const { rpcUrl, port, addresses } = goodConfig;
-  const url = `http://localhost:${port}`;
+  const rpcUrl = 'http://localhost:9999';
 
   before(() => {
-    server = createServer('http://localhost:9999', port, addresses);
+    server = createServer(rpcUrl, port, []);
   });
 
   after(() => {
@@ -134,7 +131,7 @@ describe('Eth Exporter with Eth down', () => {
   });
 
   it('parity status is down', async () => {
-    let response = await httpClient.get(`${url}/metrics`);
+    let response = await httpClient.get(`${exporterUrl}/metrics`);
     parityResponse = response.data;
     expect(parityResponse).to.contain('parity_up 0');
   });
