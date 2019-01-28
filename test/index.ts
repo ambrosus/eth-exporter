@@ -16,7 +16,7 @@ const goodConfig = yaml.safeLoad(
 const rpcUrl = 'http://localhost:8545';
 const port = '9998';
 const exporterUrl = `http://localhost:${port}`;
-const metricsUrl = `${exporterUrl}/metrics`
+const metricsUrl = `${exporterUrl}/metrics`;
 
 describe('Eth Exporter Configurations', () => {
   it('does not throw when passed good configs', () => {
