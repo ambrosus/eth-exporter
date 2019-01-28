@@ -16,6 +16,7 @@ const goodConfig = yaml.safeLoad(
 const rpcUrl = 'http://localhost:8545';
 const port = '9998';
 const exporterUrl = `http://localhost:${port}`;
+const metricsUrl = `${exporterUrl}/metrics`
 
 describe('Eth Exporter Configurations', () => {
   it('does not throw when passed good configs', () => {
@@ -40,7 +41,7 @@ describe('Eth Exporter Responses with default config', () => {
 
   before(async () => {
     server = await createServer(rpcUrl, port, []);
-    ({ data: parityResponse } = await httpClient.get(`${exporterUrl}/metrics`));
+    ({ data: parityResponse } = await httpClient.get(metricsUrl));
   });
 
   after(() => {
@@ -101,7 +102,7 @@ describe('Eth Exporter with addresses config', () => {
 
   before(async () => {
     server = await createServer(rpcUrl, port, addresses);
-    ({ data: parityResponse } = await httpClient.get(`${exporterUrl}/metrics`));
+    ({ data: parityResponse } = await httpClient.get(metricsUrl));
   });
 
   after(() => {
@@ -131,7 +132,7 @@ describe('Eth Exporter with Eth down', () => {
   });
 
   it('parity status is down', async () => {
-    let response = await httpClient.get(`${exporterUrl}/metrics`);
+    let response = await httpClient.get(metricsUrl);
     parityResponse = response.data;
     expect(parityResponse).to.contain('parity_up 0');
   });
