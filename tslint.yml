@@ -1,0 +1,32 @@
+---
+extends:
+  - tslint:recommended
+  - tslint-microsoft-contrib
+rules:
+  typedef:
+    - true
+    - arrow-parameter
+    - call-signature
+    - member-variable-declaration
+    - parameter
+    - property-declaration
+  chai-vague-errors: false
+  export-name: false
+  insecure-random: false
+  missing-jsdoc: false
+  newline-before-return: false
+  newline-per-chained-call: false
+  no-any: false
+  no-console: false
+  no-constant-condition: false
+  no-increment-decrement: false
+  no-invalid-this: false
+  no-null-keyword: false
+  no-relative-imports: false
+  no-require-imports: false
+  no-reserved-keywords: false
+  no-suspicious-comment: false
+  no-unsafe-any: false
+  ordered-imports: false
+  possible-timing-attack: false
+  strict-boolean-expressions: false
