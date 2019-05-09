@@ -83,9 +83,9 @@ export function createMetrics(
     gauges.gasPrice.set(parseInt(gasPrice, 16));
 
     try {
-    	gauges.transactionQueue.set(transactionQueue.length);
+      gauges.transactionQueue.set(transactionQueue.length);
     } catch(e) {
-	gauges.transactionQueue.set(0);
+      gauges.transactionQueue.set(0);
     }
 
     const blockData = await makeRequest(nodeURL, 'eth_getBlockByNumber', [
