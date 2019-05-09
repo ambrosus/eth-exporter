@@ -81,7 +81,12 @@ export function createMetrics(
     gauges.parityUp.set(1);
     gauges.version.set({ value: clientVersion }, 1);
     gauges.gasPrice.set(parseInt(gasPrice, 16));
-    gauges.transactionQueue.set(transactionQueue.length);
+
+    try {
+    	gauges.transactionQueue.set(transactionQueue.length);
+    } catch(e) {
+	gauges.transactionQueue.set(0);
+    }
 
     const blockData = await makeRequest(nodeURL, 'eth_getBlockByNumber', [
       latestBlockNumber,
