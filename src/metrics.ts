@@ -105,7 +105,7 @@ export function createMetrics(
       await Promise.all(
         addressList.map(async (item: IAddress) => {
           const addressBalance = await makeRequest(nodeURL, 'eth_getBalance', [
-            item.address, 
+            item.address,
             'latest'
           ]);
           gauges.addressBalance.set(
