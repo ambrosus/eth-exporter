@@ -21,7 +21,7 @@ export function createServer(
       console.log(e);
 
       process.exit(1);
-    }    
+    }
   });
   app.get('/', (req: express.Request, res: express.Response) => {
     res.send(

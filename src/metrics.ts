@@ -84,7 +84,7 @@ export function createMetrics(
 
     if (transactionQueue != null) {
       gauges.transactionQueue.set(transactionQueue.length);
-    } else {      
+    } else {
       gauges.transactionQueue.set(0);
     }
 
