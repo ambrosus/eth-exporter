@@ -82,9 +82,9 @@ export function createMetrics(
     gauges.version.set({ value: clientVersion }, 1);
     gauges.gasPrice.set(parseInt(gasPrice, 16));
 
-    try {
+    if (transactionQueue != null) {
       gauges.transactionQueue.set(transactionQueue.length);
-    } catch (e) {
+    } else {      
       gauges.transactionQueue.set(0);
     }
 
