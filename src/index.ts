@@ -14,8 +14,14 @@ export function createServer(
   const app = express();
 
   app.get('/metrics', async (req: express.Request, res: express.Response) => {
-    await promClient.createMetrics();
-    promClient.serveMetrics(req, res);
+    try {
+      await promClient.createMetrics();
+      promClient.serveMetrics(req, res);
+    } catch (e) {
+      console.log(e);
+
+      process.exit(1);
+    }
   });
   app.get('/', (req: express.Request, res: express.Response) => {
     res.send(
