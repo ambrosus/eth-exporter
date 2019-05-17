@@ -65,6 +65,12 @@ export async function makeRequest(
         id: 42
       }
     });
+    if (response.data.error == null) {
+      console.log(method, ' -> OK');      
+    }
+    else {
+      console.log(method, ' -> ', response.data.error.message);
+    }
     return response.data.result;
   } catch (error) {
     return false;
