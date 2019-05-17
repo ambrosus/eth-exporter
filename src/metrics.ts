@@ -93,14 +93,19 @@ export function createMetrics(
       false
     ]);
 
-    gauges.blockSize.set(parseInt(blockData.size, 16));
-    gauges.totalDifficulty.set(parseInt(blockData.totalDifficulty, 16));
-    gauges.latestMiner.set(
-      { address: blockData.miner },
-      parseInt(blockData.timestamp, 16)
-    );
-    gauges.gasUsed.set(parseInt(blockData.gasUsed, 16));
-    gauges.gasLimit.set(parseInt(blockData.gasLimit, 16));
+    if (blockData != null) {
+      gauges.blockSize.set(parseInt(blockData.size, 16));
+      gauges.totalDifficulty.set(parseInt(blockData.totalDifficulty, 16));
+
+      gauges.latestMiner.set(
+        { address: blockData.miner },
+        parseInt(blockData.timestamp, 16)
+      );
+
+      gauges.gasUsed.set(parseInt(blockData.gasUsed, 16));
+      gauges.gasLimit.set(parseInt(blockData.gasLimit, 16));
+    }
+
     if (addressList) {
       await Promise.all(
         addressList.map(async (item: IAddress) => {
